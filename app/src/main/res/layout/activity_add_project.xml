@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0A0A12">
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A0A0F"
+        android:padding="14dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_arrow_back_white"
+            android:layout_marginEnd="16dp" />
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD PROJECT"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.15"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-condensed" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Project Title *"
+                android:textColor="#94A3B8"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="e.g. Portfolio App"
+                android:textColor="#F1F5F9"
+                android:textColorHint="#475569"
+                android:background="@drawable/bg_input_dark"
+                android:paddingHorizontal="16dp"
+                android:inputType="text"
+                android:layout_marginBottom="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description *"
+                android:textColor="#94A3B8"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+            <EditText android:id="@+id/et_description" android:layout_width="match_parent"
+                android:layout_height="100dp" android:hint="Brief project description"
+                android:textColor="#F1F5F9" android:textColorHint="#475569"
+                android:background="@drawable/bg_input_dark" android:padding="16dp"
+                android:inputType="textMultiLine" android:gravity="top"
+                android:layout_marginBottom="16dp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Tech Stack" android:textColor="#94A3B8"
+                android:textSize="13sp" android:layout_marginBottom="6dp" />
+            <EditText android:id="@+id/et_tech_stack" android:layout_width="match_parent"
+                android:layout_height="52dp" android:hint="e.g. Java, Firebase, Retrofit"
+                android:textColor="#F1F5F9" android:textColorHint="#475569"
+                android:background="@drawable/bg_input_dark"
+                android:paddingHorizontal="16dp" android:inputType="text"
+                android:layout_marginBottom="16dp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="GitHub URL" android:textColor="#94A3B8"
+                android:textSize="13sp" android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/et_github_url"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/bg_input_dark"
+                android:hint="https://github.com/..."
+                android:inputType="textUri"
+                android:paddingHorizontal="16dp"
+                android:textColor="#F1F5F9"
+                android:textColorHint="#475569" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Project Screenshot"
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/iv_preview"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_input_dark"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <!-- Pick Image Button -->
+            <LinearLayout
+                android:id="@+id/btn_pick_image"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/bg_edu_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🖼️  Pick from Gallery"
+                    android:textColor="#60A5FA"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Selected image name -->
+            <TextView
+                android:id="@+id/tv_image_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:gravity="center"
+                android:text="No image selected"
+                android:textColor="#475569"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/bg_btn_blue"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:letterSpacing="0.12"
+                    android:text="SAVE"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0A0A12">
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A0A0F"
+        android:padding="14dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_arrow_back_white"
+            android:layout_marginEnd="16dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD SKILL"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.15"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-condensed" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Skill Name *"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+        <EditText
+            android:id="@+id/et_skill_name"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="e.g. Android Java"
+            android:textColor="#F1F5F9"
+            android:textColorHint="#475569"
+            android:background="@drawable/bg_input_dark"
+            android:paddingHorizontal="16dp"
+            android:inputType="text"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+        <Spinner
+            android:id="@+id/spinner_category"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_input_dark"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Percentage (0-100)"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+        <EditText
+            android:id="@+id/et_percentage"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="e.g. 85"
+            android:textColor="#F1F5F9"
+            android:textColorHint="#475569"
+            android:background="@drawable/bg_input_dark"
+            android:paddingHorizontal="16dp"
+            android:inputType="number"
+            android:layout_marginBottom="28dp" />
+        <LinearLayout
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_btn_blue"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SAVE"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginEnd="8dp" />
+        </LinearLayout>
+        <ProgressBar android:id="@+id/progress_bar" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:layout_marginTop="12dp" android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
+ 
+ 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="top"
+    android:paddingVertical="6dp">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/outline_arrow_circle_right_24"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/tv_summary_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Summary point goes here."
+        android:textColor="#CBD5E1"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.4" />
+
+</LinearLayout>
