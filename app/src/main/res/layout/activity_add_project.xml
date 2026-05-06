@@ -72,12 +72,26 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Tech Stack" android:textColor="#94A3B8"
                 android:textSize="13sp" android:layout_marginBottom="6dp" />
-            <EditText android:id="@+id/et_tech_stack" android:layout_width="match_parent"
-                android:layout_height="52dp" android:hint="e.g. Java, Firebase, Retrofit"
-                android:textColor="#F1F5F9" android:textColorHint="#475569"
+            <AutoCompleteTextView
+                android:id="@+id/et_tech_stack"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="Select Tech Stack"
+                android:textColor="#F1F5F9"
+                android:textColorHint="#475569"
                 android:background="@drawable/bg_input_dark"
-                android:paddingHorizontal="16dp" android:inputType="text"
-                android:layout_marginBottom="16dp" />
+                android:paddingHorizontal="16dp"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:drawablePadding="10dp"
+                android:layout_marginBottom="16dp"
+                android:inputType="none" />
+
+<!--            <EditText android:id="@+id/et_tech_stack" android:layout_width="match_parent"-->
+<!--                android:layout_height="52dp" android:hint="e.g. Java, Firebase, Retrofit"-->
+<!--                android:textColor="#F1F5F9" android:textColorHint="#475569"-->
+<!--                android:background="@drawable/bg_input_dark"-->
+<!--                android:paddingHorizontal="16dp" android:inputType="text"-->
+<!--                android:layout_marginBottom="16dp" />-->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="GitHub URL" android:textColor="#94A3B8"
                 android:textSize="13sp" android:layout_marginBottom="6dp" />

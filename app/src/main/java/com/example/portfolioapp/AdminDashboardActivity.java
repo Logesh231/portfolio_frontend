@@ -109,7 +109,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         rvProjects.setAdapter(projectAdapter);
         rvProjects.setNestedScrollingEnabled(false);
 
-        skillAdapter = new AdminSkillAdapter(skillList, this::confirmDeleteSkill,true);
+        skillAdapter = new AdminSkillAdapter(this::clearSelection,skillList, this::confirmDeleteSkill,true);
         rvSkills.setLayoutManager(new LinearLayoutManager(this));
         rvSkills.setAdapter(skillAdapter);
         rvSkills.setNestedScrollingEnabled(false);
@@ -134,12 +134,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnUpdateResume.setOnClickListener(v ->
                 startActivity(new Intent(this, UpdateResumeActivity.class)));
 
-        findViewById(R.id.btn_logout).setOnClickListener(v -> {
+       /* findViewById(R.id.btn_logout).setOnClickListener(v -> {
             sessionManager.logout();
             startActivity(new Intent(this, MainActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
-        });
+        });*/
     }
 
     @Override

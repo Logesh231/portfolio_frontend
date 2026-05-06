@@ -101,11 +101,16 @@ public class AdminSkillAdapter extends RecyclerView.Adapter<AdminSkillAdapter.Vi
 
     private static final long CLICK_DEBOUNCE_MS = 250;
     private long lastClickTime = 0;
-
-    public AdminSkillAdapter(List<Skill> list, OnDeleteClick onDelete, boolean isAdmin) {
+    public interface OnClearSelectionListener {
+        void onClearSelection();
+    }
+    private final OnClearSelectionListener clearListener;
+    public AdminSkillAdapter(OnClearSelectionListener clearListener, List<Skill> list, OnDeleteClick onDelete, boolean isAdmin) {
         this.list = list;
         this.onDelete = onDelete;
         this.isAdmin = isAdmin;
+        this.clearListener=clearListener;
+
     }
 
     @NonNull
@@ -146,6 +151,11 @@ public class AdminSkillAdapter extends RecyclerView.Adapter<AdminSkillAdapter.Vi
         h.itemView.setScaleY(isSelected ? SCALE_SELECTED : SCALE_NORMAL);
         ViewCompat.setElevation(h.itemView, isSelected ? 8f : 0f);
         h.itemView.setOnClickListener(v -> {
+
+            if (clearListener != null) {
+                clearListener.onClearSelection();
+            }
+
             long now = SystemClock.elapsedRealtime();
             if (now - lastClickTime < CLICK_DEBOUNCE_MS) return;
             lastClickTime = now;
@@ -172,15 +182,29 @@ public class AdminSkillAdapter extends RecyclerView.Adapter<AdminSkillAdapter.Vi
             }
         });
     }
+
     public void clearSelection() {
-        int prev = selectedPosition;
-        selectedPosition = -1;
-//        previousSelectedView = null;
-        if (prev != -1) {
-            previousSelectedView.setBackgroundResource(R.drawable.contact_card_bg);
-//            notifyItemChanged(prev);
+        if (selectedPosition != -1) {
+            int prev = selectedPosition;
+            selectedPosition = -1;
+
+            notifyItemChanged(prev); // ✅ let RecyclerView handle UI reset
         }
+
+        previousSelectedView = null; // ✅ reset reference
     }
+//    public void clearSelection() {
+//        animateItem(previousSelectedView, SCALE_SELECTED, SCALE_NORMAL);
+//        int prev = selectedPosition;
+//        selectedPosition = -1;
+////        previousSelectedView = null;
+//        if (prev != -1) {
+//            previousSelectedView.setBackgroundResource(R.drawable.contact_card_bg);
+////            notifyItemChanged(prev);
+//        }
+//    }
+
+
 
     private void animateItem(View view, float from, float to) {
         view.animate().cancel();

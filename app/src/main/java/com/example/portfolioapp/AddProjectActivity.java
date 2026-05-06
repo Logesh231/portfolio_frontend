@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,12 +42,13 @@ import retrofit2.Response;
 
 public class AddProjectActivity extends AppCompatActivity {
 
-    EditText   etTitle, etDescription, etTechStack, etGithubUrl;
+    EditText   etTitle, etDescription, etGithubUrl;
     LinearLayout     btnSave;
     ImageView  ivPreview, ivBack;
     LinearLayout btnPickImage;
     TextView   tvImageName, tvToolbarTitle;
     ProgressBar progressBar;
+    AutoCompleteTextView techStack;
 
     SessionManager sessionManager;
     Uri selectedImageUri = null;   // stores picked image URI
@@ -90,7 +93,6 @@ public class AddProjectActivity extends AppCompatActivity {
         sessionManager= new SessionManager(this);
         etTitle= findViewById(R.id.et_title);
         etDescription   = findViewById(R.id.et_description);
-        etTechStack     = findViewById(R.id.et_tech_stack);
         etGithubUrl     = findViewById(R.id.et_github_url);
         btnSave         = findViewById(R.id.btn_save);
         progressBar     = findViewById(R.id.progress_bar);
@@ -102,11 +104,43 @@ public class AddProjectActivity extends AppCompatActivity {
 
         ivBack.setOnClickListener(v -> finish());
         editProjectId = getIntent().getStringExtra("projectId");
+        techStack = findViewById(R.id.et_tech_stack);
+
+        String[] options = {"Android", "Web"};
+
+        techStack.setOnClickListener(v -> {
+            techStack.showDropDown();
+            techStack.setCompoundDrawablesWithIntrinsicBounds(
+                    null, null,
+                    getDrawable(R.drawable.ic_arrow_up), null);
+        });
+        techStack.setOnItemClickListener((parent, view, position, id) -> {
+            techStack.setCompoundDrawablesWithIntrinsicBounds(
+                    null, null,
+                    getDrawable(R.drawable.ic_arrow_down), null);
+        });
+        techStack.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                techStack.setCompoundDrawablesWithIntrinsicBounds(
+                        null, null,
+                        getDrawable(R.drawable.ic_arrow_down), null);
+            }
+        });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                options
+        );
+
+        techStack.setAdapter(adapter);
+
+
         if (editProjectId != null) {
             tvToolbarTitle.setText("EDIT PROJECT");
             etTitle.setText(getIntent().getStringExtra("projectTitle"));
             etDescription.setText(getIntent().getStringExtra("projectDesc"));
-            etTechStack.setText(getIntent().getStringExtra("projectStack"));
+            techStack.setText(getIntent().getStringExtra("projectStack"));
             etGithubUrl.setText(getIntent().getStringExtra("projectGithub"));
             String existingImage = getIntent().getStringExtra("projectImage");
             if (existingImage != null && !existingImage.isEmpty()) {
@@ -128,9 +162,10 @@ public class AddProjectActivity extends AppCompatActivity {
 
     // ── Save / Upload Project ─────────────────────────────────
     private void saveProject() {
+
         String title  = etTitle.getText().toString().trim();
         String desc   = etDescription.getText().toString().trim();
-        String stack  = etTechStack.getText().toString().trim();
+        String stack  = techStack.getText().toString().trim();
         String github = etGithubUrl.getText().toString().trim();
 
         if (title.isEmpty() || desc.isEmpty()) {

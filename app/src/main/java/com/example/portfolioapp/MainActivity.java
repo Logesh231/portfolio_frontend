@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         rvProjects.setAdapter(projectAdapter);
         rvProjects.setNestedScrollingEnabled(false);
 
-        skillAdapter = new AdminSkillAdapter(skillList, this::onDeleteSkill,false);
+        skillAdapter = new AdminSkillAdapter(this::clearSelection,skillList, this::onDeleteSkill,false);
         rvSkills.setLayoutManager(new LinearLayoutManager(this));
         rvSkills.setAdapter(skillAdapter);
         rvSkills.setNestedScrollingEnabled(false);
@@ -259,6 +259,16 @@ public class MainActivity extends AppCompatActivity {
         iv_github_icon=findViewById(R.id.iv_github_icon);
         iv_linkedin=findViewById(R.id.iv_linkedin);
         iv_web_icon=findViewById(R.id.iv_web_icon);
+
+        iv_web_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://logesh231.github.io/Portfolio/";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            }
+        });
 
         iv_linkedin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -410,14 +420,21 @@ public class MainActivity extends AppCompatActivity {
             projectAdapter.clearSelection();
             skillAdapter.clearSelection();
         });
-        lin_language.setOnClickListener(v -> {
-            new Handler().postDelayed(() -> {
-                selectCard(lin_language, allCards);
+        lin_language.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 projectAdapter.clearSelection();
                 skillAdapter.clearSelection();
-//                scrollView.smoothScrollTo(0, linear_edu.getTop());
-            }, 100);
+                selectCard(lin_language, allCards);
+            }
         });
+//        lin_language.setOnClickListener(v -> {
+//            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+//                projectAdapter.clearSelection();
+//                skillAdapter.clearSelection();
+//                v.post(() -> selectCard(lin_language, allCards));
+//            }, 100);
+//        });
         tvResumeFileName  = findViewById(R.id.tv_resume_filename);
         btnOpenResume     = findViewById(R.id.btn_open_resume);
         btnDownloadResume = findViewById(R.id.btn_download_resume);
@@ -488,20 +505,21 @@ public class MainActivity extends AppCompatActivity {
                                         new MenuDialog(this, currentSection).show();
                                     }
                                 }
+
                             }
                         });
         loadProjects();
         loadSkills();
         loadResume();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
         loadProjects();
         loadSkills();
-        loadResume();   // ← add this
+        loadResume();
     }
+
     private void selectCard(View clicked, List<View> allCards) {
 
         // 👉 If same view clicked again → UNSELECT
@@ -556,6 +574,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearSelection(){
+        selectedView = null; // ✅ VERY IMPORTANT
+
         emailCard.setBackgroundResource(R.drawable.contact_card_bg);
         phoneCard.setBackgroundResource(R.drawable.contact_card_bg);
         lin_photo.setBackgroundResource(R.drawable.contact_card_bg);

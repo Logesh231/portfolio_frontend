@@ -2,7 +2,11 @@ package com.example.portfolioapp;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -93,6 +97,8 @@ public class AdminProjectAdapter extends RecyclerView.Adapter<AdminProjectAdapte
 
         h.tvDesc.setMaxLines(p.isExpanded ? Integer.MAX_VALUE : 2);
 
+
+
         h.tvDesc.post(() -> {
             if (h.tvDesc.getLineCount() > 3) {
 
@@ -176,18 +182,85 @@ public class AdminProjectAdapter extends RecyclerView.Adapter<AdminProjectAdapte
         h.itemView.setScaleX(isSelected ? SCALE_SELECTED : SCALE_NORMAL);
         h.itemView.setScaleY(isSelected ? SCALE_SELECTED : SCALE_NORMAL);
         ViewCompat.setElevation(h.itemView, isSelected ? 8f : 0f);
+//        h.itemView.setOnClickListener(v -> {
+//            if (clearListener != null) {
+//                clearListener.onClearSelection();
+//            }
+//            long now = SystemClock.elapsedRealtime();
+//            if (now - lastClickTime < CLICK_DEBOUNCE_MS) return;
+//            lastClickTime = now;
+//            int pos = h.getBindingAdapterPosition();
+//            if (pos == RecyclerView.NO_POSITION) return;
+//
+//            int prevSelected = selectedPosition;
+//
+//            if (selectedPosition == pos) {
+//                selectedPosition = -1;
+//                animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
+//                h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+//                previousSelectedView = null;
+//            } else {
+//                selectedPosition = pos;
+//                animateItem(h.itemView, SCALE_NORMAL, SCALE_SELECTED);
+//                h.itemView.setBackgroundResource(R.drawable.contact_card_selected);
+//                if (previousSelectedView != null) {
+//                    animateItem(previousSelectedView, SCALE_SELECTED, SCALE_NORMAL);
+////                    previousSelectedView.setBackgroundResource(R.drawable.contact_card_bg);
+//                }
+//                previousSelectedView = h.itemView;
+//            }
+//
+//
+//            if (now - lastClickTime < CLICK_DEBOUNCE_MS) return;
+//            lastClickTime = now;
+//
+//            Context context = v.getContext();
+////
+//            new AlertDialog.Builder(context)
+//                    .setTitle("Download")
+//                    .setMessage("Do you want to open this project link?")
+//                    .setPositiveButton("OK", (dialog, which) -> {
+//
+//                        if (p.githubUrl != null && !p.githubUrl.isEmpty()) {
+//                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(p.githubUrl));
+//                            context.startActivity(intent);
+//                            selectedPosition = -1;
+//
+//                            animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
+//                            h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+//
+//                            previousSelectedView = null;
+//                        }
+//
+//                    })
+//                    .setNegativeButton("Cancel", (dialog, which) -> {
+//
+//                        // ✅ Reset selection + animation
+//                        selectedPosition = -1;
+//
+//                        animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
+//                        h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+//
+//                        previousSelectedView = null;
+//                    })
+//                    .show();
+//        });
         h.itemView.setOnClickListener(v -> {
+
             if (clearListener != null) {
                 clearListener.onClearSelection();
             }
+
             long now = SystemClock.elapsedRealtime();
             if (now - lastClickTime < CLICK_DEBOUNCE_MS) return;
             lastClickTime = now;
+
             int pos = h.getBindingAdapterPosition();
             if (pos == RecyclerView.NO_POSITION) return;
 
             int prevSelected = selectedPosition;
 
+            // ✅ Selection logic
             if (selectedPosition == pos) {
                 selectedPosition = -1;
                 animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
@@ -197,22 +270,68 @@ public class AdminProjectAdapter extends RecyclerView.Adapter<AdminProjectAdapte
                 selectedPosition = pos;
                 animateItem(h.itemView, SCALE_NORMAL, SCALE_SELECTED);
                 h.itemView.setBackgroundResource(R.drawable.contact_card_selected);
+
                 if (previousSelectedView != null) {
                     animateItem(previousSelectedView, SCALE_SELECTED, SCALE_NORMAL);
                     previousSelectedView.setBackgroundResource(R.drawable.contact_card_bg);
                 }
                 previousSelectedView = h.itemView;
             }
-            if (prevSelected != -1) {
-//                notifyItemChanged(prevSelected);
+            if(!isAdmin){
+                Context context = v.getContext();
+                String message;
+
+                if (p.techStack != null && p.techStack.equalsIgnoreCase("web")) {
+                    message = "Do you want to open this website?";
+                } else {
+                    message = "Do you want to open this project link?";
+                }
+
+                AlertDialog dialog = new AlertDialog.Builder(context)
+
+                        .setTitle("Project")
+                        .setMessage(message)
+                        .setPositiveButton("OK", (dialogInterface, which) -> {
+                            if (p.githubUrl != null && !p.githubUrl.isEmpty()) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(p.githubUrl));
+                                context.startActivity(intent);
+
+                                selectedPosition = -1;
+                                animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
+                                h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+                                previousSelectedView = null;
+                            }
+                        })
+
+                        .setNegativeButton("Cancel", (dialogInterface, which) -> {
+                            selectedPosition = -1;
+                            animateItem(h.itemView,SCALE_SELECTED,SCALE_NORMAL);
+                            h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+                            previousSelectedView=null;
+                        })
+                        .create();
+
+                dialog.setOnCancelListener(dialogInterface -> {
+                    selectedPosition = -1;
+                    animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
+                    h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+                    previousSelectedView = null;
+                });
+
+                dialog.show();
             }
+
+
         });
     }
+
+
     public void clearSelection() {
         int prev = selectedPosition;
         selectedPosition = -1;
 //        previousSelectedView = null;
         if (prev != -1) {
+            animateItem(previousSelectedView, SCALE_SELECTED, SCALE_NORMAL);
 //            notifyItemChanged(prev);
             previousSelectedView.setBackgroundResource(R.drawable.contact_card_bg);
         }
@@ -250,21 +369,20 @@ public class AdminProjectAdapter extends RecyclerView.Adapter<AdminProjectAdapte
         return list.size();
     }
     static class ViewHolder extends RecyclerView.ViewHolder {
+
+
         TextView tvTitle, tvDesc, tvStack;
-        ImageView ivImage, ivEdit, ivDelete,ivMore;
+        ImageView ivImage, ivMore;
         LinearLayout card_root;
 
         ViewHolder(View v) {
             super(v);
-            ivMore = v.findViewById(R.id.iv_more);
-
-            ivImage  = v.findViewById(R.id.iv_project_image);
-            tvTitle  = v.findViewById(R.id.tv_project_title);
-            tvDesc   = v.findViewById(R.id.tv_project_desc);
-            tvStack  = v.findViewById(R.id.tv_project_stack);
-            card_root  = v.findViewById(R.id.card_root);
-//            ivEdit   = v.findViewById(R.id.iv_edit);
-//            ivDelete = v.findViewById(R.id.iv_delete);
+            ivMore       = v.findViewById(R.id.iv_more);
+            ivImage      = v.findViewById(R.id.iv_project_image);
+            tvTitle      = v.findViewById(R.id.tv_project_title);
+            tvDesc       = v.findViewById(R.id.tv_project_desc);
+            tvStack      = v.findViewById(R.id.tv_project_stack);
+            card_root    = v.findViewById(R.id.card_root);
         }
     }
 }
