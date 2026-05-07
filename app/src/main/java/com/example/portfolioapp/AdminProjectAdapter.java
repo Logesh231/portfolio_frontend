@@ -11,6 +11,7 @@ import android.os.SystemClock;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -291,15 +293,53 @@ public class AdminProjectAdapter extends RecyclerView.Adapter<AdminProjectAdapte
 
                         .setTitle("Project")
                         .setMessage(message)
+//                        .setPositiveButton("OK", (dialogInterface, which) -> {
+//                            if (p.githubUrl != null && !p.githubUrl.isEmpty()) {
+//                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(p.githubUrl));
+//                                context.startActivity(intent);
+//                                selectedPosition = -1;
+//                                animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
+//                                h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
+//                                previousSelectedView = null;
+//                            }
+//                        })
                         .setPositiveButton("OK", (dialogInterface, which) -> {
                             if (p.githubUrl != null && !p.githubUrl.isEmpty()) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(p.githubUrl));
-                                context.startActivity(intent);
+                                String url = p.githubUrl.trim();
+
+                                // Ensure scheme exists
+                                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                                    url = "https://" + url;
+                                }
+
+                                try {
+                                    Uri uri = Uri.parse(url);
+
+                                    // Validate URL format
+                                    if (Patterns.WEB_URL.matcher(url).matches()) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+                                        // Check if there's an app to handle it
+                                        if (intent.resolveActivity(context.getPackageManager()) != null) {
+                                            context.startActivity(intent);
+                                        } else {
+                                            Toast.makeText(context, "No app found to open link", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Invalid URL", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (Exception e) {
+                                    Toast.makeText(context, "Invalid URL format", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
 
                                 selectedPosition = -1;
                                 animateItem(h.itemView, SCALE_SELECTED, SCALE_NORMAL);
                                 h.itemView.setBackgroundResource(R.drawable.contact_card_bg);
                                 previousSelectedView = null;
+                            }else {
+                                Toast.makeText(context, "Please contact admin for update url", Toast.LENGTH_SHORT).show();
                             }
                         })
 
