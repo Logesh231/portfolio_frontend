@@ -2,6 +2,7 @@ package com.example.portfolioapp;
 
 import static android.view.View.GONE;
 
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -229,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(() -> {
                     projectAdapter.clearSelection();
                     skillAdapter.clearSelection();
-                    scrollView.smoothScrollTo(0, get_in_touch.getTop());
+                    scrollToabout();
                 }, 100)
         );
 
@@ -240,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(() -> {
                     projectAdapter.clearSelection();
                     skillAdapter.clearSelection();
-                    scrollView.smoothScrollTo(0, linear_edu.getTop());
+                    scrollToedu();
                 }, 100)
         );
 
@@ -250,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(() -> {
                     projectAdapter.clearSelection();
                     skillAdapter.clearSelection();
-                    scrollView.smoothScrollTo(0, sectionAboutMe.getTop());
+                    scrollToAbout();
                 }, 100)
         );
         warmUpServer();
@@ -325,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tvWebsite = findViewById(R.id.tv_website);
         if (tvWebsite != null) {
-            tvWebsite.setOnClickListener(v -> openUrl("https://github.com/yourusername"));
+            tvWebsite.setOnClickListener(v -> openUrl("https://github.com/Logesh231"));
         }
 
         List<View> allCards = Arrays.asList(
@@ -351,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Opening Email...", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:yourmail@gmail.com"));
+                intent.setData(Uri.parse("mailto:logeshrio16@gmail.com"));
                 startActivity(intent);
             }, 1000);
         });
@@ -554,25 +556,83 @@ public class MainActivity extends AppCompatActivity {
     }
     public void scrollToTop() {
         new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, 0), 100);
-    }
-    public void scrollToPort() {
-        new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, port_sec.getTop()), 100);
-    }
-    public void scrollToAbout() {
-        new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, sectionAboutMe.getTop()), 100);
-    }
-    public void scrollToskills() {
-        new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, section_skill.getTop()), 100);
-    }
-    public void scrollToabout() {
-        new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, get_in_touch.getTop()), 100);
+                smoothScrollSlowly(0), 100);
     }
 
+    public void scrollToPort() {
+        new Handler().postDelayed(() ->
+                smoothScrollSlowly(port_sec.getTop()), 100);
+    }
+
+    public void scrollToAbout() {
+        new Handler().postDelayed(() ->
+                smoothScrollSlowly(sectionAboutMe.getTop()), 100);
+    }
+
+    public void scrollToskills() {
+        new Handler().postDelayed(() ->
+                smoothScrollSlowly(section_skill.getTop()), 100);
+    }
+
+    public void scrollToabout() {
+        new Handler().postDelayed(() ->
+                smoothScrollSlowly(get_in_touch.getTop()), 100);
+    }
+
+    public void scrollToResume() {
+        new Handler().postDelayed(() ->
+                smoothScrollSlowly(section_resume.getTop()), 100);
+    }
+
+    public void scrollToedu() {
+        new Handler().postDelayed(() ->
+                smoothScrollSlowly(linear_educ.getTop()), 100);
+    }
+//    public void scrollToTop() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, 0), 100);
+//    }
+//    public void scrollToPort() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, port_sec.getTop()), 100);
+//    }
+//    public void scrollToAbout() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, sectionAboutMe.getTop()), 100);
+//    }
+//    public void scrollToskills() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, section_skill.getTop()), 100);
+//    }
+//    public void scrollToabout() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, get_in_touch.getTop()), 100);
+//    }
+//    public void scrollToResume() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, section_resume.getTop()), 100);
+//    }
+//    public void scrollToedu() {
+//        new Handler().postDelayed(() ->
+//                scrollView.smoothScrollTo(0, linear_educ.getTop()), 100);
+//    }
+private void smoothScrollSlowly(int targetY) {
+
+    int startY = scrollView.getScrollY();
+
+    ValueAnimator animator = ValueAnimator.ofInt(startY, targetY);
+
+    animator.setDuration(900); // scroll speed
+
+    animator.setInterpolator(new DecelerateInterpolator());
+
+    animator.addUpdateListener(animation -> {
+        int value = (int) animation.getAnimatedValue();
+        scrollView.scrollTo(0, value);
+    });
+
+    animator.start();
+}
     public void clearSelection(){
         selectedView = null; // ✅ VERY IMPORTANT
 
@@ -618,14 +678,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(this::loadResume, 2000);
     }
 
-    public void scrollToResume() {
-        new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, section_resume.getTop()), 100);
-    }
-    public void scrollToedu() {
-        new Handler().postDelayed(() ->
-                scrollView.smoothScrollTo(0, linear_educ.getTop()), 100);
-    }
+
 
 
 

@@ -2,8 +2,12 @@ package com.example.portfolioapp;
 
 import static android.view.View.GONE;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.portfolioapp.model.Project;
+import com.example.portfolioapp.model.Resume;
 import com.example.portfolioapp.model.Skill;
 import com.example.portfolioapp.network.ApiClient;
 import com.example.portfolioapp.network.SessionManager;
@@ -41,13 +46,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
     ImageView iv_back;
     RecyclerView        rvProjects, rvSkills;
     LinearLayout        btnAddProject, btnAddSkill, btnUpdateResume;
-    TextView            tvAdminName;
+    LinearLayout tv_file_name;
+    TextView            tvAdminName,txt_res;
 
     List<Project>       projectList    = new ArrayList<>();
     List<Skill>         skillList      = new ArrayList<>();
     AdminProjectAdapter projectAdapter;
     AdminSkillAdapter   skillAdapter;
     ProgressBar progress_bar1,progress_bar;
+    String pdfUrl=null;
+    String originalName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         View root = findViewById(R.id.main_root);
         iv_back=findViewById(R.id.iv_back);
+
+        tv_file_name=findViewById(R.id.tv_file_name);
+        txt_res=findViewById(R.id.txt_res);
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +135,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         loadProjects();
         loadSkills();
+        loadResume();
 
         btnAddProject.setOnClickListener(v ->
                 startActivity(new Intent(this, AddProjectActivity.class)));
@@ -131,8 +143,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnAddSkill.setOnClickListener(v ->
                 startActivity(new Intent(this, AddSkillActivity.class)));
 
+
         btnUpdateResume.setOnClickListener(v ->
                 startActivity(new Intent(this, UpdateResumeActivity.class)));
+
+
 
        /* findViewById(R.id.btn_logout).setOnClickListener(v -> {
             sessionManager.logout();
@@ -140,6 +155,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
         });*/
+
     }
 
     @Override
@@ -147,6 +163,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadProjects();
         loadSkills();
+        loadResume();
     }
 
     // ── Load projects ─────────────────────────────────────────
@@ -295,5 +312,40 @@ public class AdminDashboardActivity extends AppCompatActivity {
                                 "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void loadResume() {
+        ApiClient.getService().getResume().enqueue(new Callback<Resume>() {
+            @Override
+            public void onResponse(Call<Resume> call, Response<Resume> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    pdfUrl=response.body().pdfUrl;
+                    originalName = response.body().originalName;
+                    txt_res.setText("📄 " + (originalName != null
+                            ? originalName : "resume.pdf"));
+
+                    tv_file_name.setOnClickListener(v -> openResume());
+
+                } else {
+
+                    txt_res.setText("Contact admin to upload resume.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Resume> call, Throwable t) {
+
+                txt_res.setText("Check internet connection.");
+                Toast.makeText(AdminDashboardActivity.this,
+                        "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void openResume() {
+        if (pdfUrl == null) return;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(pdfUrl));
+        startActivity(Intent.createChooser(intent, "Open Resume with"));
     }
 }
